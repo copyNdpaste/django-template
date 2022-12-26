@@ -5,6 +5,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views import View
 
+from accounts.util.authenticator import jwt_authenticator
 from app.forms import PostForm
 from app.models import Post
 
@@ -18,12 +19,14 @@ def index(request: HttpRequest) -> HttpResponse:
 
 
 class PostView(View):
-    def post(self, request: HttpRequest):
-        post_form = PostForm(request.POST)
+    @jwt_authenticator
+    def post(self, request: HttpRequest, *args, **kwargs):
+        if kwargs["user_id"]:
+            post_form = PostForm(request.POST)
 
-        if post_form.is_valid():
-            post_form.save()
-            return HttpResponseRedirect("/app/")
+            if post_form.is_valid():
+                post_form.save()
+                return HttpResponseRedirect("/app/")
 
     def get(self, request: HttpRequest, id: int) -> HttpResponse:
         post = get_object_or_404(Post, id=id)
