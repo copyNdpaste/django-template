@@ -12,9 +12,30 @@ env = environ.Env(
 # Set the project base directory
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+def set_logging():
+    return {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "console": {
+                "level": "DEBUG",
+                "class": "logging.StreamHandler",
+            },
+        },
+        "loggers": {
+            "django.db.backends": {
+                "handlers": ["console"],
+                "level": "DEBUG",
+            },
+        },
+    }
+
+
 server_env = os.environ.get("env")
 if server_env == "local":
     environ.Env.read_env(os.path.join(BASE_DIR, ".env.local"))
+    LOGGING = set_logging()
 elif server_env == "dev":
     environ.Env.read_env(os.path.join(BASE_DIR, ".env.dev"))
 elif server_env == "stage":
