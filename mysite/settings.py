@@ -32,16 +32,18 @@ def set_logging():
     }
 
 
-server_env = os.environ.get("env")
-if server_env == "local":
-    environ.Env.read_env(os.path.join(BASE_DIR, ".env.local"))
-    LOGGING = set_logging()
-elif server_env == "dev":
+# FROM .env.* file
+server_env = os.environ.get("server_env")
+if server_env == "dev":
     environ.Env.read_env(os.path.join(BASE_DIR, ".env.dev"))
 elif server_env == "stage":
     environ.Env.read_env(os.path.join(BASE_DIR, ".env.stage"))
 elif server_env == "prod":
     environ.Env.read_env(os.path.join(BASE_DIR, ".env.prod"))
+else:
+    environ.Env.read_env(os.path.join(BASE_DIR, ".env.local"))
+    LOGGING = set_logging()
+
 
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG")
@@ -49,6 +51,8 @@ DEBUG = env("DEBUG")
 # Raises Django's ImproperlyConfigured
 # exception if SECRET_KEY not in os.environ
 SECRET_KEY = env("SECRET_KEY")
+
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 
 ALLOWED_HOSTS = []
 
@@ -65,6 +69,7 @@ INSTALLED_APPS = [
     "app",
     "catube",
     "accounts",
+    "mysite",
 ]
 
 MIDDLEWARE = [
@@ -159,3 +164,9 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = "accounts.User"
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "UTC"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = CELERY_BROKER_URL
