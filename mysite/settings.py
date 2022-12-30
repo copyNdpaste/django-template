@@ -17,16 +17,42 @@ def set_logging():
     return {
         "version": 1,
         "disable_existing_loggers": False,
+        "filters": {
+            "require_debug_false": {
+                "()": "django.utils.log.RequireDebugFalse",
+            },
+            "require_debug_true": {
+                "()": "django.utils.log.RequireDebugTrue",
+            },
+        },
+        "formatters": {
+            "django.server": {
+                "()": "django.utils.log.ServerFormatter",
+                "format": "{asctime} [{levelname}] {message} {filename}:{lineno}",
+                "style": "{",
+            },
+        },
         "handlers": {
-            "console": {
-                "level": "DEBUG",
+            "django.server": {
+                "level": env("LOG_LEVEL"),
                 "class": "logging.StreamHandler",
+                "formatter": "django.server",
+            },
+            "file": {
+                "level": env("LOG_LEVEL"),
+                "filters": ["require_debug_true"],
+                "class": "logging.handlers.RotatingFileHandler",
+                "filename": f"{BASE_DIR}/mysite.log",
+                "maxBytes": 1024 * 1024 * 5,  # 5 MB
+                "backupCount": 5,
+                "formatter": "django.server",
             },
         },
         "loggers": {
-            "django.db.backends": {
-                "handlers": ["console"],
-                "level": "DEBUG",
+            "django.server": {
+                "handlers": ["django.server", "file"],
+                "level": env("LOG_LEVEL"),
+                "propagete": True,
             },
         },
     }
@@ -40,6 +66,8 @@ elif server_env == "stage":
     environ.Env.read_env(os.path.join(BASE_DIR, ".env.stage"))
 elif server_env == "prod":
     environ.Env.read_env(os.path.join(BASE_DIR, ".env.prod"))
+elif server_env == "test":
+    environ.Env.read_env(os.path.join(BASE_DIR, ".env.test"))
 else:
     environ.Env.read_env(os.path.join(BASE_DIR, ".env.local"))
     LOGGING = set_logging()
@@ -67,7 +95,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "app",
-    "catube",
     "accounts",
     "mysite",
 ]
@@ -110,7 +137,11 @@ DATABASES = {
     "default": {
         "ENGINE": env("DB_ENGINE"),
         "NAME": f'{BASE_DIR}/{env("DB_NAME")}',
-    }
+    },
+    "local": {
+        "ENGINE": env("DB_ENGINE"),
+        "NAME": f'{BASE_DIR}/{env("DB_NAME")}',
+    },
 }
 
 
