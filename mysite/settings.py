@@ -84,6 +84,12 @@ CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 
 ALLOWED_HOSTS = []
 
+ENGINE = env("DB_ENGINE")
+NAME = env("DB_NAME")
+USER = env("USER")
+PASSWORD = env("PASSWORD")
+HOST = env("HOST")
+PORT = env("PORT")
 
 # Application definition
 
@@ -135,12 +141,12 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": env("DB_ENGINE"),
-        "NAME": env("DB_NAME"),
-        "USER": env("USER"),
-        "PASSWORD": env("PASSWORD"),
-        "HOST": env("HOST"),
-        "PORT": env("PORT"),
+        "ENGINE": ENGINE,
+        "NAME": NAME,
+        "USER": USER,
+        "PASSWORD": PASSWORD,
+        "HOST": HOST,
+        "PORT": PORT,
     },
 }
 
