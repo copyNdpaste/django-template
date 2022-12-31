@@ -1,9 +1,14 @@
+from typing import Union
+
 from django.contrib.auth.hashers import check_password, make_password
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
+from rest_framework.request import Request
+from rest_framework.response import Response
+
 from accounts.models import User
 
 
-def login(request: HttpRequest) -> HttpResponse:
+def login(request: Request) -> Union[Response, HttpResponseRedirect]:
     body = request.POST
     username = body["username"]
     password = body["password"]
@@ -14,10 +19,10 @@ def login(request: HttpRequest) -> HttpResponse:
     if is_authenticated:
         return HttpResponseRedirect("/api/token/")
 
-    return HttpResponse("로그인 실패")
+    return Response("로그인 실패")
 
 
-def signup(request: HttpRequest) -> HttpResponse:
+def signup(request: Request) -> Response:
     body = request.POST
     username = body["username"]
     password = body["password"]
@@ -26,4 +31,4 @@ def signup(request: HttpRequest) -> HttpResponse:
     user = User(username=username, password=encrypted_password)
     user.save()
 
-    return HttpResponse("회원가입 성공")
+    return Response("회원가입 성공")
