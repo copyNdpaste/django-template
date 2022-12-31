@@ -6,6 +6,8 @@
 * form
 * celery
 * redis
+* pytest
+* pytest-xdist
 
 # pycharm setting
 run server
@@ -16,3 +18,7 @@ run celery task
 ![img_2.png](z_images_for_readme/img_2.png)
 result
 ![img_3.png](z_images_for_readme/img_3.png)
+
+# pytest
+pytest
+pytest -n {n}
