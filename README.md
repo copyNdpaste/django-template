@@ -9,10 +9,10 @@
 
 # pycharm setting
 run server
-![img.png](images_for_readme/img.png)
+![img.png](z_images_for_readme/img.png)
 run celery
-![img_1.png](images_for_readme/img_1.png)
+![img_1.png](z_images_for_readme/img_1.png)
 run celery task
-![img_2.png](images_for_readme/img_2.png)
+![img_2.png](z_images_for_readme/img_2.png)
 result
-![img_3.png](images_for_readme/img_3.png)
+![img_3.png](z_images_for_readme/img_3.png)
