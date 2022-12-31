@@ -136,11 +136,11 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": env("DB_ENGINE"),
-        "NAME": f'{BASE_DIR}/{env("DB_NAME")}',
-    },
-    "local": {
-        "ENGINE": env("DB_ENGINE"),
-        "NAME": f'{BASE_DIR}/{env("DB_NAME")}',
+        "NAME": env("DB_NAME"),
+        "USER": env("USER"),
+        "PASSWORD": env("PASSWORD"),
+        "HOST": env("HOST"),
+        "PORT": env("PORT"),
     },
 }
 
